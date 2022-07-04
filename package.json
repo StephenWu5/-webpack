@@ -1,0 +1,25 @@
+{
+  "name": "webpack",
+  "version": "1.0.0",
+  "jsnext:main": "es/index.js",
+  "main": "lib/index.js",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack": "webpack webpack.config.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "antd": "^4.21.5",
+    "babel-loader": "^8.2.5",
+    "css-loader": "^6.7.1",
+    "loadash": "^1.0.0",
+    "lodash": "^4.17.21",
+    "mini-css-extract-plugin": "^2.6.1",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.9.3"
+  }
+}

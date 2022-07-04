@@ -1,0 +1,8 @@
+/*!************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./main.css ***!
+  \************************************************************/
+#app {
+    text-align: center;
+    color: aqua;
+    background-image: url(./6c6f8d153137ca370aa4.png);
+}
