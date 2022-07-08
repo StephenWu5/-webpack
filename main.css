@@ -1,5 +1,9 @@
+:root {
+    --red: #d33;
+}
 #app {
     text-align: center;
     color: aqua;
+    color: var(--red);
     background-image: url('./public/happiness.png');
 }

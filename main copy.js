@@ -1,5 +1,5 @@
 require('./main.css');
-const show = require('./show');
+const show = require('./some');
 
 show('webpack');
 console.log('webpack');

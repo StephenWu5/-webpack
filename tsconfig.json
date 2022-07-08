@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+        // 指定 ECMAScript 目标版本: 'ES5'
+		"target": "es5",
+        // 指定模块为 commonjs
+		"module": "commonjs",
+        // 开启导入帮助语句
+		"importHelpers": true,
+        // 处理react
+		"jsx": "react"
+	},
+	"baseUrl": ".",
+    // 引入tslib
+	"paths": {
+		"tslib": ["node_modules/tslib/tslib.d.ts"]
+	}
+}
