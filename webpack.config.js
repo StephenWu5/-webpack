@@ -5,21 +5,15 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 //在vue-loader中拿到VueLoaderPlugin函数
 const { VueLoaderPlugin } = require('vue-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-// module.exports = function (env, argv) {
-//     const isProduction = env['production'];
-//     console.log(env, 'env');
-//     return {
+// const StylelintPlugin = require('stylelint-webpack-plugin');
+
 module.exports = {
     // 模块的入口
     // entry: {name: './main.js', nameCopy: './main copy.js'},
     entry: () => {
         // return ['./ex6modules.js'];
         // return ['./main.js', './main copy.js'];
-        // return ['./main.js'];
-        return {
-            main: './main.js',
-            login: './main_login.js',
-        }
+        return ['./main.js'];
     },
     // 
     // content: path.resolve(__dirname, './public'),
@@ -45,6 +39,24 @@ module.exports = {
     module: {
         noParse: /jquery|chartjs/, // 不去解析jquery中的依赖关系，
         rules: [{
+            // eslint-loader 代码检查
+            test: [/\.js$/],
+            loader: 'eslint-loader',
+            exclude: /node_modules/,
+            options: {
+                // 放在最前
+                enforce: "prev",
+            }
+        }, {
+            // tslint-loader 代码检查
+            test: [/\.ts$/],
+            loader: 'tslint-loader',
+            exclude: /node_modules/,
+            options: {
+                // 放在最前
+                enforce: "prev",
+            }
+        }, {
             // 处理vue项目的文件
             // vue-loader: 将vue文件分为三部分样式，js和html。 css-loader处理样式  vue-template-compiler 处理html
             test: [/\.vue$/],
@@ -70,6 +82,7 @@ module.exports = {
                     // 从缓存目录里面取出
                     cacheDirectory: true,
                 },
+                // post:强制将该loader执行顺序放到最后，pre:强制将该loader放到最前面
                 // enforce: 'post',
             }],
             enforce: 'post',
@@ -119,26 +132,13 @@ module.exports = {
             hash: true,
             showErrors: true
         }),
-        //处理html
-        new HtmlWebpackPlugin({
-            template: './public/index_login.html', //开发环境需要路径
-            filename: 'login.html',
-            chunks: ['login'],
-            inject: 'body', //所有javascript资源将被放置在body元素的底部
-            minify: {
-                html5: true,
-                collapseWhitespace: true //把生成的 index.html 文件的内容的没用空格去掉，减少空间
-            },
-            title: '练习webpack5配置--登陆页面',
-            hash: true,
-            showErrors: true
-        }),
         // 把css资源分离出来
         new MiniCssExtractPlugin({
             filename: `[name]_[contenthash:8].css`,
         }),
         // webpack处理vue文件
-        new VueLoaderPlugin()
+        new VueLoaderPlugin(),
+        // new StylelintPlugin()
     ],
     // plugins: [
     // ExtractTextPlugin webpack5已经弃用
@@ -174,7 +174,7 @@ module.exports = {
         // 关闭host访问， webpack5已经弃用
         // disableHostCheck: true,
         // 开启https服务
-        https: true,
+        https: false,
         // 客户端日志
         client: {
             logging: 'info',
@@ -186,7 +186,7 @@ module.exports = {
         open: false,
         // 高级监听文件变化
         watchFiles: {
-            paths: ['src/**/*.php', 'public/**/*'],
+            // paths: ['src/**/*.php', 'public/**/*'],
             options: {
                 usePolling: false,
             },

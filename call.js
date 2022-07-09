@@ -3,6 +3,6 @@ function show (content) {
     document.querySelector('#app').innerText = content;
 }
 
-exports = {
+module.exports = {
     show
 }
