@@ -5,7 +5,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 //在vue-loader中拿到VueLoaderPlugin函数
 const { VueLoaderPlugin } = require('vue-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-// const StylelintPlugin = require('stylelint-webpack-plugin');
+const StylelintPlugin = require('stylelint-webpack-plugin');
 
 module.exports = {
     // 模块的入口
@@ -138,7 +138,7 @@ module.exports = {
         }),
         // webpack处理vue文件
         new VueLoaderPlugin(),
-        // new StylelintPlugin()
+        new StylelintPlugin()
     ],
     // plugins: [
     // ExtractTextPlugin webpack5已经弃用
