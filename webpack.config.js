@@ -113,13 +113,11 @@ module.exports = {
             // 4.8 css压缩 ： cssnano css-lodaer已经内置了 minimize 开启
             test: /\.css$/,
             use: [{
-                loader: MiniCssExtractPlugin.loader,
-                options: {
-                    // 指 定 存 放 CSs 中 导 入 的 资 源 ( 例 如 图 片 ) 的 CDN 目 录 URL
-                    publicPath: '//img.cdn.com/id/'
-                }
+                loader: MiniCssExtractPlugin.loader
             },
-            { loader: 'css-loader' },
+            {
+                loader: 'css-loader'
+            },
             // 使用loader的默认配置
             // 'postcss-loader',
             // 修改loader的配置
@@ -133,7 +131,7 @@ module.exports = {
                 loader: 'url-loader',
                 options: {
                     // publicPath 其实是资源引入的前缀
-                    publicPath: '/dist/image', // 相对打包后的index.html的图片位置
+                    publicPath: '/image', // 相对打包后的index.html的图片位置
                     outputPath: 'image/', // 输出到build的目录image下
                     // 图片小于 10kb,会被 base64处理
                     limit: 10 * 1024,
@@ -188,7 +186,8 @@ module.exports = {
         }),
         // 把css资源分离出来
         new MiniCssExtractPlugin({
-            filename: '[name]_[contenthash:8].css'
+            filename: 'css/[name]_[contenthash:8].css',
+            chunkFilename: 'css/[id].[hash].css'
         }),
         // webpack处理vue文件
         new VueLoaderPlugin(),
