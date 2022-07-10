@@ -13,7 +13,7 @@ const show = require('./show');
 require('./main.css');
 // console.log(_.get(obj, 'name', ''), some, '1111');
 
-show('webpack');
+show('webpack1');
 // console.log('webpack');
 // console.log('webpack');
 // 接收热更新输出，只有accept才能被更新

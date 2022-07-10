@@ -10,7 +10,7 @@ const compiler = webpack(config);
 
 app.use(webpackDevMiddleware(compiler, {
     // 默认是 config.output.publicPath
-    // publicPath: config.output.publicPath
+    publicPath: config.output.publicPath
 }));
 // re ti huan
 app.use(require('webpack-hot-middleware')(compiler, {
@@ -18,5 +18,8 @@ app.use(require('webpack-hot-middleware')(compiler, {
 }));
 
 // 将 项 目 根 目 录 作 为 静 态 资 源 目 录 , 用 于 服 务 HTML 文 件
-app.use(express.static('.'));
+// 设置根目录
+app.use(express.static('./dist', {
+    maxage: '0s'
+}));
 app.listen(3000);

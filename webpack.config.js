@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HotModuleReplacementPlugin = require('webpack/lib/HotModuleReplacementPlugin');
 // const StylelintPlugin = require('stylelint-webpack-plugin');
 
@@ -22,13 +23,14 @@ module.exports = {
     // 最终代码的输出
     output: {
         // [name] 对应 chunk的名称
-        filename: 'js/[id].[name].[hash:8].[chunkhash:8].bundle.js',
+        // filename: 'js/[id].[name].[hash:8].[chunkhash:8].bundle.js',
+        filename: 'js/[name].[chunkhash:8].bundle.js',
         // chunkFilename 是一个被main.js异步加载的间接的JS文件。那么如果我们打包一个间接的JS文件的话，就会走chunkFilename这个配置项
         chunkFilename: 'chunkJs/[name].min.js',
         // path: path.resolve(__dirname, './dist_[hash]'),
         path: path.resolve(__dirname, './dist'),
         // 资源路径引用  /为根目录
-        publicPath: '/',
+        publicPath: '/dist/',
         // 用于配置crossOriginLoading配置异步插入标签的crossorigin值
         crossOriginLoading: 'use-credentials',
         // libraryTarget 导出库的方式： this commonjs commonjs2 var window global var是默认
@@ -97,6 +99,23 @@ module.exports = {
             // loaders: ExtractTextPlugin.extract({
             //     use: ['css-loader'],
             // })
+        }, {
+            // 处理图片
+            test:/\.jpg|png|gif|bmp|ttf|eot|svg|woff|woff2$/,
+            use: [{
+                loader: 'url-loader',
+                options: {
+                    // publicPath 其实是资源引入的前缀
+                    publicPath: '/dist/image', // 相对打包后的index.html的图片位置
+                    outputPath: 'image/', // 输出到build的目录image下
+                    // 图片小于 10kb,会被 base64处理
+                    limit: 10 * 1024,
+                    esModule: false,
+                    // 给图片重命名
+	                name: '[name].[hash:6].[ext]'
+                }
+            }],
+            type: 'javascript/auto'
         }]
     },
     // 解析文件配置
@@ -143,7 +162,17 @@ module.exports = {
         // new StylelintPlugin()
         // 为 了 支 持 模 块 热 替 换 , 生 成 .hot-update .json文 件
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoEmitOnErrorsPlugin()
+        // new webpack.NoEmitOnErrorsPlugin()
+        new CleanWebpackPlugin({
+            root: path.resolve(__dirname, '../'), //根目录
+            verbose: false, //开启在控制台输出信息
+            cleanOnceBeforeBuildPatterns: [
+                // 不清除dll文件夹
+                '**/*',
+                '!dll',
+                '!dll/**'
+            ]
+        })
     ],
     // plugins: [
     // ExtractTextPlugin webpack5已经弃用
@@ -166,7 +195,7 @@ module.exports = {
             ]
         },
         // http服务根目录
-        static: path.join(__dirname, 'public'),
+        static: path.join(__dirname, 'dist'),
         // 添加响应头的信息
         headers: {
             'x-foo': 'bar'
@@ -202,7 +231,7 @@ module.exports = {
     //  eval-source-map:使用eval打包源文件模块，在同一个文件中生产干净的完整版的sourcemap，但是对打包后输出的JS文件的执行具有性能和安全的隐患。在开发阶段这是一个非常好的选项，在生产阶段则一定要不开启这个选项。
     // cheap-module-eval-source-map:这是在打包文件时最快的生产source map的方法，生产的 Source map 会和打包后的JavaScript文件同行显示，没有影射列，和eval-source-map选项具有相似的缺点。
     // devtool: isProduction ? undefined : 'source-map',
-    devtool: 'source-map',
+    devtool: 'eval-cheap-module-source-map',
     // 构建不同环境的代码
     target: 'web',
     // 根目录
@@ -217,5 +246,4 @@ module.exports = {
         extensions: ['.js', '.json'],
         mainFields: ['loader', 'main']
     }
-
 }
