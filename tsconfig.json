@@ -1,16 +1,19 @@
 {
 	"compilerOptions": {
-        // 指定 ECMAScript 目标版本: 'ES5'
+		// 指定 ECMAScript 目标版本: 'ES5'
 		"target": "es5",
-        // 指定模块为 commonjs
+		// 指定模块为 commonjs
 		"module": "commonjs",
-        // 开启导入帮助语句
+		// 开启导入帮助语句
 		"importHelpers": true,
-        // 处理react
-		"jsx": "react"
+		// 处理react
+		"jsx": "react",
+        // 下面两行代码处理报错： 在将之前后缀为jsx的组件转化为tsx后缀的组件时，抛出Cannot read property 'createElement' of undefined
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true
 	},
 	"baseUrl": ".",
-    // 引入tslib
+	// 引入tslib
 	"paths": {
 		"tslib": ["node_modules/tslib/tslib.d.ts"]
 	}
