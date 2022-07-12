@@ -25,7 +25,7 @@ module.exports = {
         // return ['./ex6modules.js'];
         // return ['./src/main.js', './main copy.js'];
         // 为 了 支 持 模 块 热 替 换 , 注 入 代 理 客 尸 端
-        return ['webpack-hot-middleware/client', './src/main.js'];
+        return ['webpack-hot-middleware/client', './src/main_treeshaking.js'];
     },
     // content: path.resolve(__dirname, './public'),
     // 最终代码的输出
@@ -51,6 +51,13 @@ module.exports = {
     },
     // 热更新只在开发模式下有用
     mode: isProduction ? 'production' : 'development',
+    // mode: 'production',
+    // 在生产环境下，Webpack 默认会添加 Tree Shaking 的配置，因此只需写一行 mode: 'production' 即可
+    // 根据环境的不同进行配置以后，还需要在 package.json 中，添加字段：**sideEffects: false，**告诉 Webpack 哪些代码可以处理。
+    // 开发环境下的配置
+    optimization: {
+        usedExports: true
+    },
     module: {
         // noParse 处理 jquery|chartjs等没有处理模块化标准的工具
         // 缩小文件的查找范围 4.1.6
@@ -112,6 +119,8 @@ module.exports = {
         }, {
             // 4.8 css压缩 ： cssnano css-lodaer已经内置了 minimize 开启
             test: /\.css$/,
+            // 告诉 webapck, css 不需要tree-shaking
+            sideEffects: true,
             use: [{
                 loader: MiniCssExtractPlugin.loader
             },
@@ -327,7 +336,7 @@ module.exports = {
     // cheap-module-source-map:在一个单独的文件中产生一个不带列映射的map，不带列映射提高了打包速度，但是也使得浏览器开发者工具只能对应到具体的行，不能对应到具体的列（符号）,会对调试造成不便。
     //  eval-source-map:使用eval打包源文件模块，在同一个文件中生产干净的完整版的sourcemap，但是对打包后输出的JS文件的执行具有性能和安全的隐患。在开发阶段这是一个非常好的选项，在生产阶段则一定要不开启这个选项。
     // cheap-module-eval-source-map:这是在打包文件时最快的生产source map的方法，生产的 Source map 会和打包后的JavaScript文件同行显示，没有影射列，和eval-source-map选项具有相似的缺点。
-    devtool: isProduction ? 'eval-cheap-module-source-map' : 'hidden-source-map',
+    devtool: isProduction ? 'hidden-source-map' : 'eval-cheap-module-source-map',
     // 构建不同环境的代码
     target: 'web',
     // 根目录

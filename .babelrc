@@ -1,6 +1,6 @@
 {
-    // 这里不要使用 纯"react" 否则回报错 Plugin/Preset files are not allowed to export objects, only functions。
-    // @babel/preset-env 处理es6语法
-    // @babel/preset-react 处理react语法
+	// 这里不要使用 纯"react" 否则回报错 Plugin/Preset files are not allowed to export objects, only functions。
+	// @babel/preset-env 处理es6语法
+	// @babel/preset-react 处理react语法
 	"presets": ["@babel/preset-env", "@babel/preset-react"]
 }
