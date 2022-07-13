@@ -9,15 +9,15 @@ export function funB() {
     console.log('funcB');
 }
 
-class classA {
-    constructor() {
-        console.log('classA');
-    }
-}
+// class classA {
+//     constructor() {
+//         console.log('classA');
+//     }
+// }
 
-class classB {
-    constructor() {
-        console.log('classB');
-    }
-}
+// class classB {
+//     constructor() {
+//         console.log('classB');
+//     }
+// }
 

@@ -1,6 +1,7 @@
 const path = require('path');
 // extract-text-webpack-plugin 已经过时了
 // const ExtractTextPlugin = require('extract-text-webpack-plugin');
+// 4.13 prepack 预打包，不需要处理
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 //在vue-loader中拿到VueLoaderPlugin函数
 const { VueLoaderPlugin } = require('vue-loader');
@@ -9,9 +10,13 @@ const webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const addAssetHtmlWebpackPlugin = require('add-asset-html-webpack-plugin');
 const HappyPack = require('happypack');
+// 4.11 抽取公共代码 无需处理
+// const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
+// 压缩代码
 const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
 var happyThreadPool = HappyPack.ThreadPool({ size: 5 });
-
+// 4.14 作用域提升
+const ModuleConcatenationPlugin = require('webpack/lib/optimize/ModuleConcatenationPlugin');
 const HotModuleReplacementPlugin = require('webpack/lib/HotModuleReplacementPlugin');
 // const StylelintPlugin = require('stylelint-webpack-plugin');
 // 4.7 区分环境
@@ -25,7 +30,7 @@ module.exports = {
         // return ['./ex6modules.js'];
         // return ['./src/main.js', './main copy.js'];
         // 为 了 支 持 模 块 热 替 换 , 注 入 代 理 客 尸 端
-        return ['webpack-hot-middleware/client', './src/main_treeshaking.js'];
+        return ['webpack-hot-middleware/client', './src/main_scope'];
     },
     // content: path.resolve(__dirname, './public'),
     // 最终代码的输出
@@ -33,6 +38,7 @@ module.exports = {
         // [name] 对应 chunk的名称
         // filename: 'js/[id].[name].[hash:8].[chunkhash:8].bundle.js',
         filename: 'js/[name].[chunkhash:8].bundle.js',
+        // 4.12 代码分割，按需加载
         // chunkFilename 是一个被main.js异步加载的间接的JS文件。那么如果我们打包一个间接的JS文件的话，就会走chunkFilename这个配置项
         chunkFilename: 'chunkJs/[name].min.js',
         // path: path.resolve(__dirname, './dist_[hash]'),
@@ -50,8 +56,9 @@ module.exports = {
         // libraryExport: 'a'
     },
     // 热更新只在开发模式下有用
-    mode: isProduction ? 'production' : 'development',
-    // mode: 'production',
+    // mode: isProduction ? 'production' : 'development',
+    mode: 'development',
+    // tree-shaking 4.10
     // 在生产环境下，Webpack 默认会添加 Tree Shaking 的配置，因此只需写一行 mode: 'production' 即可
     // 根据环境的不同进行配置以后，还需要在 package.json 中，添加字段：**sideEffects: false，**告诉 Webpack 哪些代码可以处理。
     // 开发环境下的配置
@@ -163,7 +170,8 @@ module.exports = {
         },
         // mainFields 是第三方模块的入口文件的描述
         // 缩小文件的查找范围 4.1.3  只用'main'
-        mainFields: ['main'],
+        // 4.14 作用域提升 配合 js:next 来使用
+        mainFields: ['js:next', 'main'],
         // 补足后缀
         // 缩小文件的查找范围 4.1.5 extensions长度短，
         extensions: ['.tsx', '.ts', '.js'],
@@ -250,40 +258,42 @@ module.exports = {
         // }),
         // 4.4 | 4.8 开启代码js压缩
         // 使用 ParallelUglifyPlugin 并行压缩输出JS代码
-        new ParallelUglifyPlugin({
-            // 传递给 UglifyJS的参数如下：
-            uglifyJS: {
-                output: {
-                    /*
-                     是否输出可读性较强的代码，即会保留空格和制表符，默认为输出，为了达到更好的压缩效果，
-                     可以设置为false
-                    */
-                    beautify: false,
-                    /*
-                     是否保留代码中的注释，默认为保留，为了达到更好的压缩效果，可以设置为false
-                    */
-                    comments: false
-                },
-                // cacheDir: path.resolve(__dirname, '/dist/cacheDir'),
-                compress: {
-                    /*
-                     是否删除代码中所有的console语句，默认为不删除，开启后，会删除所有的console语句
-                    */
-                    drop_console: true,
-                    /*
-                     是否内嵌虽然已经定义了，但是只用到一次的变量，比如将 var x = 1; y = x, 转换成 y = 5, 默认为不
-                     转换，为了达到更好的压缩效果，可以设置为false
-                    */
-                    collapse_vars: true,
+        // new ParallelUglifyPlugin({
+        //     // 传递给 UglifyJS的参数如下：
+        //     uglifyJS: {
+        //         output: {
+        //             /*
+        //              是否输出可读性较强的代码，即会保留空格和制表符，默认为输出，为了达到更好的压缩效果，
+        //              可以设置为false
+        //             */
+        //             beautify: false,
+        //             /*
+        //              是否保留代码中的注释，默认为保留，为了达到更好的压缩效果，可以设置为false
+        //             */
+        //             comments: false
+        //         },
+        //         // cacheDir: path.resolve(__dirname, '/dist/cacheDir'),
+        //         compress: {
+        //             /*
+        //              是否删除代码中所有的console语句，默认为不删除，开启后，会删除所有的console语句
+        //             */
+        //             drop_console: true,
+        //             /*
+        //              是否内嵌虽然已经定义了，但是只用到一次的变量，比如将 var x = 1; y = x, 转换成 y = 5, 默认为不
+        //              转换，为了达到更好的压缩效果，可以设置为false
+        //             */
+        //             collapse_vars: true,
 
-                    /*
-                     是否提取出现了多次但是没有定义成变量去引用的静态值，比如将 x = 'xxx'; y = 'xxx'  转换成
-                     var a = 'xxxx'; x = a; y = a; 默认为不转换，为了达到更好的压缩效果，可以设置为false
-                    */
-                    reduce_vars: true
-                }
-            }
-        })
+        //             /*
+        //              是否提取出现了多次但是没有定义成变量去引用的静态值，比如将 x = 'xxx'; y = 'xxx'  转换成
+        //              var a = 'xxxx'; x = a; y = a; 默认为不转换，为了达到更好的压缩效果，可以设置为false
+        //             */
+        //             reduce_vars: true
+        //         }
+        //     }
+        // })
+        // 作用域提升
+        new ModuleConcatenationPlugin()
     ],
     devServer: {
         // 开启热替换
@@ -307,7 +317,7 @@ module.exports = {
         },
         // 指定ip地址，让局域网设备或者同事访问自己的电脑
         // host: '0.0.0.0',
-        port: 8080,
+        port: 8888,
         // 访问白名单域名，安全处理
         allowedHosts: ['192.168.20.246'],
         // 关闭host访问， webpack5已经弃用
@@ -337,6 +347,7 @@ module.exports = {
     //  eval-source-map:使用eval打包源文件模块，在同一个文件中生产干净的完整版的sourcemap，但是对打包后输出的JS文件的执行具有性能和安全的隐患。在开发阶段这是一个非常好的选项，在生产阶段则一定要不开启这个选项。
     // cheap-module-eval-source-map:这是在打包文件时最快的生产source map的方法，生产的 Source map 会和打包后的JavaScript文件同行显示，没有影射列，和eval-source-map选项具有相似的缺点。
     devtool: isProduction ? 'hidden-source-map' : 'eval-cheap-module-source-map',
+    // devtool: isProduction ? 'hidden-source-map' : 'eval-cheap-module-source-map',
     // 构建不同环境的代码
     target: 'web',
     // 根目录

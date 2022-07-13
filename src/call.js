@@ -1,7 +1,9 @@
 function show (content) {
-    document.querySelector('#app').innerText = content;
+    document.querySelector('html').innerText = content;
 }
 
+var string = '你好';
 module.exports = {
-    show
+    show,
+    string
 }
