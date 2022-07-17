@@ -30,7 +30,7 @@ module.exports = {
         // return ['./ex6modules.js'];
         // return ['./src/main.js', './main copy.js'];
         // 为 了 支 持 模 块 热 替 换 , 注 入 代 理 客 尸 端
-        return ['webpack-hot-middleware/client', './src/main_scope'];
+        return ['webpack-hot-middleware/client', './src/main'];
     },
     // content: path.resolve(__dirname, './public'),
     // 最终代码的输出
@@ -56,8 +56,8 @@ module.exports = {
         // libraryExport: 'a'
     },
     // 热更新只在开发模式下有用
-    // mode: isProduction ? 'production' : 'development',
-    mode: 'development',
+    mode: isProduction ? 'production' : 'development',
+    // mode: 'development',
     // tree-shaking 4.10
     // 在生产环境下，Webpack 默认会添加 Tree Shaking 的配置，因此只需写一行 mode: 'production' 即可
     // 根据环境的不同进行配置以后，还需要在 package.json 中，添加字段：**sideEffects: false，**告诉 Webpack 哪些代码可以处理。
@@ -139,7 +139,14 @@ module.exports = {
             // 修改loader的配置
             {
                 loader: 'postcss-loader'
-            }]
+            },
+            {
+                loader: 'webpack-loader?queu=9999',
+                options: {
+                    name: '路飞'
+                }
+            }
+            ]
         }, {
             // 处理图片
             test: /\.jpg|png|gif|bmp|ttf|eot|svg|woff|woff2$/,
@@ -177,7 +184,7 @@ module.exports = {
         extensions: ['.tsx', '.ts', '.js'],
         // 项目中存在大量导入代码的，可以指定路径。
         // 缩小文件的查找范围 4.1.2
-        modules: ['./src/compontents', path.resolve(__dirname, 'node_modules')],
+        modules: [path.resolve(__dirname, 'node_modules'), './src/compontents'],
         // 第三方模块描述文件
         descriptionFiles: ['package.json']
         // 导入文件强制开启后缀
@@ -358,9 +365,9 @@ module.exports = {
     },
     // 配置如何加载本地的loader
     resolveLoader: {
-        modules: ['node_modules'],
+        modules: [path.resolve(__dirname, 'node_modules'), path.resolve(__dirname, '../1')],
         extensions: ['.js'],
-        mainFields: ['loader', 'main']
+        mainFields: ['loader', 'js:next', 'main']
     },
     // 开启监听模式 4.5.1
     watch: true,
@@ -372,5 +379,5 @@ module.exports = {
         poll: 1000,
         // 排除不需要监听的文件
         ignored: /node_modules/
-    }
+    },
 }

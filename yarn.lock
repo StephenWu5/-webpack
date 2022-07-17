@@ -5651,6 +5651,11 @@
     "dns-packet" "^5.2.2"
     "thunky" "^1.0.2"
 
+"my-webpack-loader@^1.0.0":
+  "integrity" "sha512-HM+EcufoBlIzryVRagok9tcheyGg/IlVSNegdOfasn0kZgLNLjdnkd19B/ArirY/NQByEI/6KlXuEKZtoh65LA=="
+  "resolved" "https://registry.npmjs.org/my-webpack-loader/-/my-webpack-loader-1.0.0.tgz"
+  "version" "1.0.0"
+
 "nanoid@^3.3.4":
   "integrity" "sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw=="
   "resolved" "https://registry.npmmirror.com/nanoid/-/nanoid-3.3.4.tgz"
@@ -8995,6 +9000,10 @@
     "html-entities" "^2.1.0"
     "querystring" "^0.2.0"
     "strip-ansi" "^6.0.0"
+
+"webpack-loader@file:../webpack-loader":
+  "resolved" "file:../webpack-loader"
+  "version" "1.0.0"
 
 "webpack-log@^1.2.0":
   "integrity" "sha512-U9AnICnu50HXtiqiDxuli5gLB5PGBo7VvcHx36jRZHwK4vzOYLbImqT4lwWwoMHdQWwEKw736fCHEekokTEKHA=="

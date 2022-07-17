@@ -1,9 +1,11 @@
 :root {
-    --red: #dd3333;
+	--red: #dd3333;
 }
 #app {
-    text-align: center;
-    color: aqua;
-    color: var(--red);
-    background-image: url('../public/happiness.png');
+	text-align: center;
+	color: aqua;
+	background-image: url("../public/happiness.png");
+}
+html {
+	background-color: #ccc;
 }
